@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Bus Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .map {
+      width: 100%;
+      height: 250px;
+      background: #e3e3e3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .dark-mode {
+      background: #121212;
+      color: #e0e0e0;
+    }
+    .dark-mode header {
+      background: #222;
+    }
+    .dark-mode .card {
+      background: #1e1e1e;
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🚍 Smart Bus Tracking & Ticketing</h1>
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </header>
+
+  <div class="container">
+
+    <!-- Bus Search -->
+    <div class="card">
+      <h2>🔍 Search Bus</h2>
+      <input type="text" id="route" placeholder="Enter Route (e.g., 21)">
+      <input type="text" id="stop" placeholder="Enter Stop Code (e.g., 05)">
+      <select id="filter">
+        <option value="all">All Buses</option>
+        <option value="ac">AC Only</option>
+        <option value="nonac">Non-AC</option>
+      </select>
+      <select id="sort">
+        <option value="eta">Sort by Earliest Arrival</option>
+        <option value="fare">Sort by Lowest Fare</option>
+      </select>
+      <button onclick="searchBus()">Search</button>
+    </div>
+
+    <!-- Results -->
+    <div class="card" id="results" style="display:none;">
+      <h2>🚌 Bus Details</h2>
+      <p id="busInfo"></p>
+      <div class="map">[Route Map Placeholder]</div>
+      <button onclick="showBooking()">Book Ticket</button>
+    </div>
+
+    <!-- Booking -->
+    <div class="card" id="booking" style="display:none;">
+      <h2>🎟 Book Ticket</h2>
+      <input type="text" placeholder="From Stop" id="fromStop">
+      <input type="text" placeholder="To Stop" id="toStop">
+      <select id="payment">
+        <option>UPI</option>
+        <option>Cash</option>
+      </select>
+      <button onclick="bookTicket()">Confirm Booking</button>
+      <p id="ticketMsg"></p>
+    </div>
+
+    <!-- Ticket History -->
+    <div class="card" id="history" style="display:none;">
+      <h2>📂 My Tickets</h2>
+      <ul id="ticketList"></ul>
+    </div>
+
+  </div>
+
+  <script>
+    let tickets = [];
+
+    function searchBus() {
+      let route = document.getElementById("route").value;
+      let stop = document.getElementById("stop").value;
+      let filter = document.getElementById("filter").value;
+      let sort = document.getElementById("sort").value;
+
+      // Dummy data (replace with API call)
+      let eta = Math.floor(Math.random() * 15) + 1;
+      let seats = Math.floor(Math.random() * 40);
+      let fare = Math.floor(Math.random() * 50) + 10;
+      let type = (filter === "ac") ? "AC" : "Non-AC";
+
+      document.getElementById("results").style.display = "block";
+      document.getElementById("busInfo").innerHTML =
+        `Bus Route: ${route} <br>
+         Stop: ${stop} <br>
+         ETA: ${eta} minutes <br>
+         Seats Available: ${seats} <br>
+         Fare: ₹${fare} <br>
+         Type: ${type}`;
+    }
+
+    function showBooking() {
+      document.getElementById("booking").style.display = "block";
+    }
+
+    function bookTicket() {
+      let from = document.getElementById("fromStop").value;
+      let to = document.getElementById("toStop").value;
+      let pay = document.getElementById("payment").value;
+      let otp = Math.floor(1000 + Math.random() * 9000);
+
+      let ticket = `From: ${from}, To: ${to}, Payment: ${pay}, OTP: ${otp}`;
+      tickets.push(ticket);
+
+      document.getElementById("ticketMsg").innerText =
+        `✅ Ticket booked successfully! Your OTP: ${otp}`;
+      showHistory();
+    }
+
+    function showHistory() {
+      document.getElementById("history").style.display = "block";
+      let list = document.getElementById("ticketList");
+      list.innerHTML = "";
+      tickets.forEach(t => {
+        let li = document.createElement("li");
+        li.innerText = t;
+        list.appendChild(li);
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>
