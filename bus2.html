@@ -1,184 +1,220 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Bus Tracker</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Real-Time Bus Tracking & Booking</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f4f4f4;
-      color: #333;
+    :root {
+      --primary:#0b76ef;
+      --secondary:#1db954;
+      --text:#0f172a;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --white:#ffffff;
     }
-    header {
-      background: #007bff;
-      color: white;
-      padding: 15px;
-      text-align: center;
-    }
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    input, select, button {
-      padding: 8px;
-      margin: 5px 0;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .map {
-      width: 100%;
-      height: 250px;
-      background: #e3e3e3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #555;
-      border-radius: 6px;
-      margin-top: 10px;
-    }
-    .dark-mode {
-      background: #121212;
-      color: #e0e0e0;
-    }
-    .dark-mode header {
-      background: #222;
-    }
-    .dark-mode .card {
-      background: #1e1e1e;
-      color: #e0e0e0;
-    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+
+    /* HEADER */
+    header{background:var(--white);border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:100}
+    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:15px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--primary)}
+
+    /* HAMBURGER */
+    .hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer}
+    .hamburger span{width:25px;height:3px;background:var(--primary);border-radius:2px;transition:0.3s}
+
+    /* MENU */
+    .mobile-menu{display:none;flex-direction:column;gap:12px;background:var(--white);padding:15px;border-top:1px solid #eee}
+    .mobile-menu a{color:var(--muted);text-decoration:none;font-weight:500}
+    .mobile-menu a:hover{color:var(--primary)}
+
+    /* HERO */
+    .hero{padding:60px 20px;text-align:center;background:linear-gradient(135deg,#0b76ef1a,#1db9541a)}
+    .hero h1{font-size:34px;margin-bottom:12px}
+    .hero p{color:var(--muted);max-width:600px;margin:0 auto 24px}
+    .hero-buttons{display:flex;justify-content:center;gap:12px}
+    .search-bar{margin:30px auto;display:flex;gap:10px;max-width:600px}
+    .search-bar input,.search-bar select{flex:1;padding:12px;border:1px solid #d1d5db;border-radius:8px}
+    .search-bar button{padding:12px 20px;border:none;border-radius:8px;background:var(--primary);color:white;font-weight:600}
+
+    /* SECTIONS */
+    section{padding:60px 20px}
+    section h2{text-align:center;font-size:26px;margin-bottom:30px}
+
+    /* FEATURES */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+    .feature-card{background:var(--white);padding:20px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05);text-align:center}
+    .feature-card h3{margin-bottom:10px;color:var(--primary)}
+
+    /* HOW IT WORKS */
+    .steps{display:flex;flex-wrap:wrap;gap:20px;justify-content:center}
+    .step{flex:1;min-width:220px;background:var(--white);padding:20px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05);text-align:center}
+    .step h3{margin-bottom:8px;color:var(--secondary)}
+
+    /* TESTIMONIALS */
+    .testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+    .testimonial{background:var(--white);padding:20px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05);font-style:italic}
+    .testimonial strong{display:block;margin-top:10px;font-style:normal;color:var(--primary)}
+
+    /* ALERTS */
+    .alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
+    .alert-card{background:#f2f2f2;border:1px solid #ccc;padding:20px;border-radius:10px;box-shadow:0px 2px 5px rgba(0,0,0,0.1)}
+    .alert-card h3{margin-bottom:10px;color:#b30000}
+
+    /* ROUTES */
+    .routes-table{width:100%;border-collapse:collapse;background:#fff;box-shadow:0px 2px 6px rgba(0,0,0,0.1);border-radius:12px;overflow:hidden}
+    .routes-table th,.routes-table td{padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:left}
+    .routes-table th{background:#0b76ef;color:white}
+    .routes-table tr:hover{background:#f9fafb}
+
+    /* FOOTER */
+    footer{background:var(--white);border-top:1px solid #e5e7eb;text-align:center;padding:20px;font-size:14px;color:var(--muted)}
   </style>
 </head>
 <body>
+
+  <!-- HEADER -->
   <header>
-    <h1>🚍 Smart Bus Tracking & Ticketing</h1>
-    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <div class="container">
+      <nav>
+        <div class="brand">🚍 BusTrack</div>
+
+        <!-- Hamburger -->
+        <div class="hamburger" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+
+      <!-- Dropdown Menu -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#track">Track Bus</a>
+        <a href="#book">Book Ticket</a>
+        <a href="#routes">Routes</a>
+        <a href="#contact">Contact</a>
+        <a href="#admin">Admin Login</a>
+      </div>
+    </div>
   </header>
 
-  <div class="container">
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Track Your Bus in Real-Time. Book Tickets Instantly.</h1>
+    <p>No more waiting at bus stops. Get live bus locations, instant ticket booking, and SMS fallback for a hassle-free journey.</p>
 
-    <!-- Bus Search -->
-    <div class="card">
-      <h2>🔍 Search Bus</h2>
-      <input type="text" id="route" placeholder="Enter Route (e.g., 21)">
-      <input type="text" id="stop" placeholder="Enter Stop Code (e.g., 05)">
-      <select id="filter">
-        <option value="all">All Buses</option>
-        <option value="ac">AC Only</option>
-        <option value="nonac">Non-AC</option>
+    <div class="search-bar">
+      <input type="text" placeholder="Enter Bus No / Route / Stop">
+      <select>
+        <option value="track">Track</option>
+        <option value="book">Book</option>
       </select>
-      <select id="sort">
-        <option value="eta">Sort by Earliest Arrival</option>
-        <option value="fare">Sort by Lowest Fare</option>
-      </select>
-      <button onclick="searchBus()">Search</button>
+      <button>Go</button>
     </div>
 
-    <!-- Results -->
-    <div class="card" id="results" style="display:none;">
-      <h2>🚌 Bus Details</h2>
-      <p id="busInfo"></p>
-      <div class="map">[Route Map Placeholder]</div>
-      <button onclick="showBooking()">Book Ticket</button>
+    <div class="hero-buttons">
+      <button class="btn btn-primary">Track Bus Now</button>
+      <button class="btn btn-secondary">Book Ticket</button>
     </div>
+  </section>
 
-    <!-- Booking -->
-    <div class="card" id="booking" style="display:none;">
-      <h2>🎟 Book Ticket</h2>
-      <input type="text" placeholder="From Stop" id="fromStop">
-      <input type="text" placeholder="To Stop" id="toStop">
-      <select id="payment">
-        <option>UPI</option>
-        <option>Cash</option>
-      </select>
-      <button onclick="bookTicket()">Confirm Booking</button>
-      <p id="ticketMsg"></p>
+  <!-- ROUTES & DRIVER DETAILS (moved up) -->
+  <section>
+    <h2>🛣 Bus Routes & Staff Details</h2>
+    <div class="container">
+      <table class="routes-table">
+        <thead>
+          <tr><th>Route</th><th>Bus No.</th><th>Driver Name</th><th>Conductor Name</th><th>Contact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>City Center → Railway Station</td><td>BUS-101</td><td>Ramesh Kumar</td><td>Vikas Singh</td><td>+91 98765 43210</td></tr>
+          <tr><td>Bus Stand → Airport</td><td>BUS-202</td><td>Sunil Sharma</td><td>Arjun Patel</td><td>+91 87654 32109</td></tr>
+          <tr><td>Main Market → University</td><td>BUS-303</td><td>Ajay Verma</td><td>Rohit Yadav</td><td>+91 76543 21098</td></tr>
+          <tr><td>Old City → Industrial Area</td><td>BUS-404</td><td>Mahesh Gupta</td><td>Sandeep Kumar</td><td>+91 65432 10987</td></tr>
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- Ticket History -->
-    <div class="card" id="history" style="display:none;">
-      <h2>📂 My Tickets</h2>
-      <ul id="ticketList"></ul>
+  <!-- DRIVER INFO -->
+  <section id="drivers">
+    <h2>Driver Information</h2>
+    <div class="container features">
+      <div class="feature-card"><h3>👨‍✈️ Driver Profile</h3><p>Verified profile with name, ID, and contact number.</p></div>
+      <div class="feature-card"><h3>🚌 Bus Details</h3><p>Know your bus number, route, and assigned driver.</p></div>
+      <div class="feature-card"><h3>⭐ Ratings & Feedback</h3><p>Passengers can rate drivers and give feedback.</p></div>
     </div>
+  </section>
 
-  </div>
+  <!-- SMS FOR KEYPAD USERS -->
+  <section id="sms">
+    <h2>SMS Service for Keypad Users</h2>
+    <div class="container features">
+      <div class="feature-card"><h3>📍 Live Location via SMS</h3><p>Send an SMS like <strong>BUS 21 STOP 5</strong> to get bus timings.</p></div>
+      <div class="feature-card"><h3>🎟 Ticket Booking via SMS</h3><p>Send <strong>BOOK BUS 21 FROM CITYA TO CITYB</strong> to book.</p></div>
+      <div class="feature-card"><h3>✅ Confirmation & Updates</h3><p>Receive booking details, driver info & ETA on keypad phones.</p></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <h2>How It Works</h2>
+    <div class="container steps">
+      <div class="step"><h3>1. Track</h3><p>Search and see live bus positions & ETA.</p></div>
+      <div class="step"><h3>2. Book</h3><p>Reserve seats and pay online securely.</p></div>
+      <div class="step"><h3>3. Board</h3><p>Show QR or SMS ticket to the conductor.</p></div>
+    </div>
+  </section>
+
+  <!-- ALERTS SECTION -->
+  <section>
+    <h2>🚨 Live Bus Alerts</h2>
+    <div class="container alerts">
+      <div class="alert-card"><h3>❌ Cancelled Buses</h3><p>Instant updates on cancellations.</p></div>
+      <div class="alert-card"><h3>⏳ Delayed Buses</h3><p>Real-time delay info with updated ETA.</p></div>
+      <div class="alert-card"><h3>🔔 Service Notifications</h3><p>Updates about route changes & extra buses.</p></div>
+      <div class="alert-card"><h3>📢 Passenger Alerts</h3><p>SMS & App notifications so users stay informed.</p></div>
+    </div>
+  </section>
+
+  <!-- FEATURES (moved down here) -->
+  <section>
+    <h2>Features</h2>
+    <div class="container features">
+      <div class="feature-card"><h3>🚌 Live Bus Tracking</h3><p>View the exact location of buses in real-time.</p></div>
+      <div class="feature-card"><h3>🎟 Online Ticket Booking</h3><p>Book tickets online and get QR or SMS confirmation.</p></div>
+      <div class="feature-card"><h3>📲 SMS Fallback</h3><p>Check bus timings and bookings via SMS without internet.</p></div>
+      <div class="feature-card"><h3>⏱ ETA Notifications</h3><p>Stay updated with accurate bus arrival alerts.</p></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section>
+    <h2>What Our Users Say</h2>
+    <div class="container testimonials">
+      <div class="testimonial">“Booking is super easy and saves me time.”<strong>— Riya, Student</strong></div>
+      <div class="testimonial">“SMS updates help me even when I have no data.”<strong>— Rajesh, Daily Commuter</strong></div>
+      <div class="testimonial">“Real-time tracking is very accurate and reliable.”<strong>— Ankit, Office Goer</strong></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>© <span id="year"></span> BusTrack | Real-Time Bus Tracking & Booking</footer>
 
   <script>
-    let tickets = [];
-
-    function searchBus() {
-      let route = document.getElementById("route").value;
-      let stop = document.getElementById("stop").value;
-      let filter = document.getElementById("filter").value;
-      let sort = document.getElementById("sort").value;
-
-      // Dummy data (replace with API call)
-      let eta = Math.floor(Math.random() * 15) + 1;
-      let seats = Math.floor(Math.random() * 40);
-      let fare = Math.floor(Math.random() * 50) + 10;
-      let type = (filter === "ac") ? "AC" : "Non-AC";
-
-      document.getElementById("results").style.display = "block";
-      document.getElementById("busInfo").innerHTML =
-        `Bus Route: ${route} <br>
-         Stop: ${stop} <br>
-         ETA: ${eta} minutes <br>
-         Seats Available: ${seats} <br>
-         Fare: ₹${fare} <br>
-         Type: ${type}`;
-    }
-
-    function showBooking() {
-      document.getElementById("booking").style.display = "block";
-    }
-
-    function bookTicket() {
-      let from = document.getElementById("fromStop").value;
-      let to = document.getElementById("toStop").value;
-      let pay = document.getElementById("payment").value;
-      let otp = Math.floor(1000 + Math.random() * 9000);
-
-      let ticket = `From: ${from}, To: ${to}, Payment: ${pay}, OTP: ${otp}`;
-      tickets.push(ticket);
-
-      document.getElementById("ticketMsg").innerText =
-        `✅ Ticket booked successfully! Your OTP: ${otp}`;
-      showHistory();
-    }
-
-    function showHistory() {
-      document.getElementById("history").style.display = "block";
-      let list = document.getElementById("ticketList");
-      list.innerHTML = "";
-      tickets.forEach(t => {
-        let li = document.createElement("li");
-        li.innerText = t;
-        list.appendChild(li);
-      });
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark-mode");
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function toggleMenu(){
+      const menu=document.getElementById("mobileMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }
   </script>
+
 </body>
 </html>
+
